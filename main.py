@@ -1,11 +1,26 @@
-from dotenv import load_dotenv
-from requests import get
 import os
-load_dotenv()
+import dotenv
+import requests
+
+dotenv.load_dotenv()
 
 api_key = os.getenv("API_KEY")
+oras = input("Introduceti numele orasului: ").strip()
 
-print(api_key)
+url = "https://api.openweathermap.org/data/2.5/weather"
+parametri = {
+    "q": oras,
+    "appid": api_key,
+    "units": "metric",
+}
 
-response = get(f"https://api.example.com/data?api_key={api_key}")
-print(response.json())
+with requests.get(url, params=parametri) as raspuns:
+    raspuns.raise_for_status()
+    raspunsweather = raspuns.json()
+
+stareavremi = raspunsweather["weather"][0]["main"]
+temperature = raspunsweather["main"]["temp"]
+viteza_vantului = raspunsweather["wind"]["speed"]
+print(f"Starea vremii: {stareavremi}")
+print(f"Temperatura: {temperature}")
+print(f"Viteza vantului: {viteza_vantului}")
